@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#09090d">
+<title>Mr Kali GPT 😈</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#09090d;color:#f5f5f7;font-family:Arial,sans-serif;height:100dvh;overflow:hidden}
+button,textarea{font:inherit}
+button{cursor:pointer}
+.app{height:100dvh;display:flex}
+.sidebar{width:260px;background:#101016;border-right:1px solid #292933;padding:18px;display:flex;flex-direction:column;flex-shrink:0}
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:28px}
+.logo{background:linear-gradient(135deg,#a855f7,#5b21b6);padding:12px;border-radius:13px;font-size:22px}
+.brand-name{font-weight:bold;font-size:18px}
+.sub{font-size:10px;color:#999;margin-top:4px}
+.new{background:#1c1c25;color:white;border:1px solid #333;border-radius:10px;padding:13px;text-align:left}
+.label{color:#888;font-size:11px;margin:25px 0 12px}
+.history{flex:1;overflow:auto}
+.history-item{padding:11px;font-size:13px;color:#ccc;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-radius:8px}
+.history-item:hover{background:#222}
+.side-btn{background:none;border:0;color:#bbb;padding:12px;text-align:left}
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+.topbar{height:65px;border-bottom:1px solid #292933;display:flex;align-items:center;justify-content:space-between;padding:0 22px}
+.top-title{font-weight:bold}
+.model{font-size:11px;color:#c4a4ff;background:#261a3d;padding:7px 11px;border-radius:20px;margin-left:10px}
+.status{font-size:11px;color:#4ade80}
+.chat-area{flex:1;overflow-y:auto;padding:25px 16px}
+.welcome{max-width:700px;margin:9vh auto 0;text-align:center}
+.big-logo{width:75px;height:75px;margin:auto auto 22px;border-radius:25px;display:grid;place-items:center;font-size:38px;background:linear-gradient(135deg,#a855f7,#3b176e);box-shadow:0 0 50px #8b5cf640}
+h1{font-size:34px}
+h1 span{color:#a78bfa}
+.welcome p{color:#999;line-height:1.7;font-size:14px}
+.suggestions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:35px;text-align:left}
+.suggestion{background:#14141b;border:1px solid #30303a;color:white;padding:17px;border-radius:13px}
+.suggestion:hover{border-color:#8b5cf6}
+.suggestion strong{display:block;font-size:13px;margin-bottom:8px}
+.suggestion small{color:#999;font-size:11px}
+.messages{max-width:850px;margin:auto}
+.message{display:flex;gap:12px;margin:24px 0;animation:fade .3s}
+.avatar{width:34px;height:34px;flex-shrink:0;border-radius:10px;background:#30203f;display:grid;place-items:center}
+.user-avatar{background:#292933}
+.message-content{flex:1;min-width:0;font-size:14px;line-height:1.75}
+.message-name{font-size:12px;font-weight:bold;margin-bottom:7px}
+.user-text{white-space:pre-wrap;overflow-wrap:anywhere}
+.copy{background:none;border:1px solid #333;color:#aaa;border-radius:7px;padding:6px;margin-top:8px;font-size:11px}
+.typing{color:#aaa;font-size:13px}
+.composer-wrap{padding:10px 16px 20px}
+.composer{max-width:850px;margin:auto}
+.input-box{display:flex;align-items:flex-end;gap:10px;background:#17171f;border:1px solid #383844;border-radius:17px;padding:12px}
+.input-box:focus-within{border-color:#8b5cf6}
+textarea{flex:1;width:100%;min-height:30px;max-height:150px;resize:none;outline:none;border:0;background:none;color:white;padding:7px}
+textarea::placeholder{color:#888}
+.send{width:40px;height:40px;background:#8b5cf6;color:white;border:0;border-radius:11px;font-size:20px}
+.send:disabled{opacity:.4}
+.footer{text-align:center;color:#777;font-size:10px;margin-top:12px}
+.menu{display:none;background:none;border:0;color:white;font-size:22px}
+.overlay{display:none}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:700px){
+.sidebar{position:fixed;z-index:5;top:0;bottom:0;left:-270px;transition:.25s}
+.sidebar.open{left:0}
+.menu{display:block}
+.overlay.show{display:block;position:fixed;inset:0;background:#0009;z-index:4}
+.topbar{padding:0 13px}
+.welcome{margin-top:7vh}
+h1{font-size:27px}
+.suggestions{grid-template-columns:1fr}
+.chat-area{padding:20px 12px}
+.status{display:none}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar" id="sidebar">
+<div class="brand">
+<div class="logo">😈</div>
+<div><div class="brand-name">Mr Kali GPT</div><div class="sub">YOUR AI ASSISTANT</div></div>
+</div>
+<button class="new" onclick="newChat()">＋ New Chat</button>
+<div class="label">RECENT CHATS</div>
+<div class="history" id="history"></div>
+<button class="side-btn" onclick="newChat()">✚ New conversation</button>
+<button class="side-btn" onclick="clearHistory()">⌫ Clear history</button>
+</aside>
+
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+<main class="main">
+<header class="topbar">
+<div style="display:flex;align-items:center;gap:12px">
+<button class="menu" onclick="toggleMenu()">☰</button>
+<div class="top-title">Mr Kali GPT 😈</div>
+<span class="model">AI Assistant</span>
+</div>
+<div class="status">● Ready</div>
+</header>
+
+<section class="chat-area" id="chatArea">
+<div class="welcome" id="welcome">
+<div class="big-logo">😈</div>
+<h1>Welcome to <span>Mr Kali GPT</span></h1>
+<p>Your personal AI assistant. Ask anything, build anything,<br>write code and explore new ideas.</p>
+<div class="suggestions">
+<button class="suggestion" onclick="suggest('Build me a professional website using HTML CSS and JavaScript')"><strong>💻 Build a Website</strong><small>Create modern websites and applications.</small></button>
+<button class="suggestion" onclick="suggest('Explain artificial intelligence in simple words')"><strong>🧠 Learn Something</strong><small>Understand difficult topics easily.</small></button>
+<button class="suggestion" onclick="suggest('Give me 10 creative YouTube video ideas')"><strong>✨ Generate Ideas</strong><small>Discover creative ideas.</small></button>
+<button class="suggestion" onclick="suggest('Write a Python calculator program')"><strong>⚡ Write Code</strong><small>Generate code in different languages.</small></button>
+</div>
+</div>
+<div class="messages" id="messages"></div>
+</section>
+
+<div class="composer-wrap">
+<div class="composer">
+<div class="input-box">
+<textarea id="prompt" rows="1" placeholder="Message Mr Kali GPT..." onkeydown="handleKey(event)" oninput="resizeInput(this)"></textarea>
+<button class="send" id="send" onclick="sendMessage()">↑</button>
+</div>
+<div class="footer">Mr Kali GPT can make mistakes. Verify important information.</div>
+</div>
+</div>
+</main>
+</div>
+
+<script>
+const API_ENDPOINT="/api/chat";
+let chats=JSON.parse(localStorage.getItem("kali_chats")||"[]");
+let activeChat=null,busy=false;
+
+function save(){localStorage.setItem("kali_chats",JSON.stringify(chats))}
+function newChat(){
+activeChat=null;
+document.getElementById("messages").innerHTML="";
+document.getElementById("welcome").style.display="block";
+document.getElementById("prompt").value="";
+historyRender();closeMenu();
+}
+function getChat(){
+if(!activeChat){
+activeChat=Date.now().toString();
+chats.unshift({id:activeChat,title:"New conversation",messages:[]});
+}
+return chats.find(c=>c.id===activeChat);
+}
+function historyRender(){
+const el=document.getElementById("history");el.innerHTML="";
+chats.forEach(c=>{
+const item=document.createElement("div");
+item.className="history-item";item.textContent="◈ "+c.title;
+item.onclick=()=>loadChat(c.id);el.appendChild(item);
+});
+}
+function loadChat(id){
+activeChat=id;
+const c=getChat();
+document.getElementById("welcome").style.display="none";
+document.getElementById("messages").innerHTML="";
+c.messages.forEach(m=>addMessage(m.role,m.content));
+scrollDown();closeMenu();
+}
+function clearHistory(){
+if(confirm("Delete all conversations?")){chats=[];save();newChat()}
+}
+function addMessage(role,content){
+const row=document.createElement("div");row.className="message";
+const av=document.createElement("div");
+av.className="avatar "+(role==="user"?"user-avatar":"");
+av.textContent=role==="user"?"👤":"😈";
+const body=document.createElement("div");body.className="message-content";
+const name=document.createElement("div");name.className="message-name";
+name.textContent=role==="user"?"You":"Mr Kali GPT";
+const txt=document.createElement("div");txt.className="user-text";txt.textContent=content;
+body.append(name,txt);
+if(role==="assistant"){
+const b=document.createElement("button");b.className="copy";b.textContent="Copy response";
+b.onclick=()=>navigator.clipboard.writeText(content).then(()=>b.textContent="Copied!");
+body.appendChild(b);
+}
+row.append(av,body);document.getElementById("messages").appendChild(row);scrollDown();
+}
+function scrollDown(){
+const el=document.getElementById("chatArea");el.scrollTop=el.scrollHeight;
+}
+function showTyping(){
+const row=document.createElement("div");row.className="message";row.id="typing";
+row.innerHTML='<div class="avatar">😈</div><div class="message-content"><div class="message-name">Mr Kali GPT</div><div class="typing">Thinking...</div></div>';
+document.getElementById("messages").appendChild(row);scrollDown();
+}
+function removeTyping(){document.getElementById("typing")?.remove()}
+
+async function sendMessage(){
+const input=document.getElementById("prompt");
+const message=input.value.trim();
+if(!message||busy)return;
+busy=true;document.getElementById("send").disabled=true;
+document.getElementById("welcome").style.display="none";
+const c=getChat();
+c.messages.push({role:"user",content:message});
+if(c.messages.length===1)c.title=message.slice(0,35);
+addMessage("user",message);
+input.value="";input.style.height="30px";
+save();historyRender();showTyping();
+try{
+const response=await fetch(API_ENDPOINT,{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({messages:c.messages})
+});
+const raw=await response.text();
+let data;
+try{data=JSON.parse(raw)}
+catch(e){throw new Error("Backend returned invalid data. Check backend hosting.");}
+if(!response.ok)throw new Error(data.error||"Server error "+response.status);
+if(!data.reply)throw new Error("AI returned an empty response.");
+removeTyping();
+c.messages.push({role:"assistant",content:data.reply});
+addMessage("assistant",data.reply);save();
+}catch(e){
+removeTyping();console.error(e);
+addMessage("assistant","⚠️ "+e.message+"\nPlease check your backend and API setup.");
+}finally{
+busy=false;document.getElementById("send").disabled=false;input.focus();
+}
+}
+function handleKey(e){if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage()}}
+function resizeInput(el){el.style.height="30px";el.style.height=Math.min(el.scrollHeight,150)+"px"}
+function suggest(t){document.getElementById("prompt").value=t;sendMessage()}
+function toggleMenu(){
+document.getElementById("sidebar").classList.toggle("open");
+document.getElementById("overlay").classList.toggle("show");
+}
+function closeMenu(){
+document.getElementById("sidebar").classList.remove("open");
+document.getElementById("overlay").classList.remove("show");
+}
+historyRender();
+</script>
+</body>
+  </html>
+  
