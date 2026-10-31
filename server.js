@@ -1,16 +1,9 @@
+
 import express from "express";
 import OpenAI from "openai";
-import dotenv from "dotenv";
 import rateLimit from "express-rate-limit";
-import path from "path";
-import { fileURLToPath } from "url";
-
-dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const ai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || "missing-key"
@@ -23,13 +16,11 @@ app.use("/api/", rateLimit({
   limit: 15
 }));
 
-app.use(express.static(path.join(__dirname, "public")));
-
 const SYSTEM_PROMPT = `
-You are Mr Kali GPT 😈, a powerful AI assistant.
-Answer questions, explain topics, write code, build websites,
-help with programming, generate ideas and assist with research.
-Be friendly, intelligent, direct and helpful.
+You are Mr Kali GPT 😈, a helpful AI assistant.
+Answer questions, explain topics, write code,
+build websites and help with programming.
+Be friendly, intelligent and direct.
 Match the user's language.
 Never pretend to perform actions you cannot perform.
 `;
@@ -58,8 +49,10 @@ app.post("/api/chat", async (req, res) => {
     }
 
     const input = messages.slice(-40).map(m => {
-      if (!["user", "assistant"].includes(m.role) ||
-          typeof m.content !== "string") {
+      if (
+        !["user", "assistant"].includes(m.role) ||
+        typeof m.content !== "string"
+      ) {
         throw new Error("Invalid message format.");
       }
 
@@ -84,12 +77,10 @@ app.post("/api/chat", async (req, res) => {
     console.error("AI ERROR:", error);
 
     return res.status(500).json({
-      error: error.message || "AI server error."
+      error: "AI server error. Please try again."
     });
   }
 });
 
-app.listen(PORT, () => {
-  console.log("Mr Kali GPT running on port " + PORT);
-});
-  
+export default app;
+      
